@@ -23,6 +23,7 @@
         body {
             font-family: 'Inter', sans-serif;
             background-color: #fcfaf7;
+            overflow-x: hidden;
         }
         
         /* Subtle Background Animations */
@@ -175,6 +176,7 @@
     let searchQuery = '';
     let scrolled = false;
     let expandedInsights = {};
+    let mobileMenuOpen = false;
 
     function toggleInsight(id) {
         expandedInsights[id] = !expandedInsights[id];
@@ -184,7 +186,13 @@
     function setCurrentPage(page) {
         currentPage = page;
         expandedInsights = {};
+        mobileMenuOpen = false;
         window.scrollTo({ top: 0, behavior: 'smooth' });
+        renderApp();
+    }
+
+    function toggleMobileMenu() {
+        mobileMenuOpen = !mobileMenuOpen;
         renderApp();
     }
 
@@ -239,11 +247,11 @@
                 </div>
                 
                 <!-- Navigation -->
-                <nav class="fixed w-full z-50 transition-all duration-500 ${scrolled ? 'bg-white/95 backdrop-blur-md py-3 shadow-md border-b border-gray-100' : 'bg-transparent py-6'}">
-                    <div class="max-w-7xl mx-auto px-6 md:px-8 flex justify-between items-center">
+                <nav class="fixed w-full z-50 transition-all duration-500 ${scrolled || mobileMenuOpen ? 'bg-white/95 backdrop-blur-md shadow-md border-b border-gray-100' : 'bg-transparent'} ${scrolled ? 'py-3' : 'py-4 md:py-6'}">
+                    <div class="max-w-7xl mx-auto px-4 md:px-8 flex justify-between items-center">
                         <div class="flex flex-col cursor-pointer group" onclick="setCurrentPage('home')">
-                            <span class="font-serif text-xl md:text-2xl font-bold tracking-tight text-[#0f172a] leading-none uppercase group-hover:text-[#a37e2c] transition-colors">Lex et Justitia</span>
-                            <span class="text-[8px] uppercase tracking-[0.3em] text-[#a37e2c] mt-1 font-medium">Institutional Registry | Est. 2007</span>
+                            <span class="font-serif text-lg md:text-2xl font-bold tracking-tight text-[#0f172a] leading-none uppercase group-hover:text-[#a37e2c] transition-colors">Lex et Justitia</span>
+                            <span class="text-[7px] md:text-[8px] uppercase tracking-[0.3em] text-[#a37e2c] mt-1 font-medium">Institutional Registry | Est. 2007</span>
                         </div>
                         <div class="hidden lg:flex items-center gap-6 text-[11px] font-semibold tracking-wide text-[#2c2c2c] uppercase">
                             <button onclick="setCurrentPage('home')" class="hover:text-[#a37e2c] transition-all relative pb-1 ${currentPage === 'home' ? 'text-[#a37e2c]' : ''}">Overview ${currentPage === 'home' ? '<span class="absolute bottom-0 left-0 w-full h-0.5 bg-[#a37e2c]"></span>' : ''}</button>
@@ -253,8 +261,23 @@
                             <button onclick="setCurrentPage('partners')" class="hover:text-[#a37e2c] transition-all relative pb-1 ${currentPage === 'partners' ? 'text-[#a37e2c]' : ''}">Counsel ${currentPage === 'partners' ? '<span class="absolute bottom-0 left-0 w-full h-0.5 bg-[#a37e2c]"></span>' : ''}</button>
                             <button onclick="setCurrentPage('partners')" class="ml-4 px-5 py-2.5 bg-[#0f172a] text-white hover:bg-[#a37e2c] transition-all rounded-md shadow-md text-[10px] whitespace-nowrap font-bold tracking-wider">PRIVATE CONSULTATION</button>
                         </div>
-                        <button class="lg:hidden text-2xl text-[#0f172a]" onclick="alert('Menu: Please use desktop view for full navigation')"><i class="fas fa-bars"></i></button>
+                        <button class="lg:hidden w-10 h-10 flex items-center justify-center text-[#0f172a] rounded-md hover:bg-[#0f172a]/5 transition-colors" onclick="toggleMobileMenu()">
+                            <i class="fas ${mobileMenuOpen ? 'fa-times' : 'fa-bars'} text-xl"></i>
+                        </button>
                     </div>
+                    <!-- Mobile Menu -->
+                    ${mobileMenuOpen ? `
+                    <div class="lg:hidden border-t border-gray-100 bg-white/95 backdrop-blur-md">
+                        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col">
+                            <button onclick="setCurrentPage('home')" class="text-left py-3.5 px-2 text-sm font-semibold uppercase tracking-wider border-b border-gray-100 ${currentPage === 'home' ? 'text-[#a37e2c]' : 'text-[#2c2c2c]'} hover:text-[#a37e2c] transition-colors">Overview</button>
+                            <button onclick="setCurrentPage('about')" class="text-left py-3.5 px-2 text-sm font-semibold uppercase tracking-wider border-b border-gray-100 ${currentPage === 'about' ? 'text-[#a37e2c]' : 'text-[#2c2c2c]'} hover:text-[#a37e2c] transition-colors">Institution</button>
+                            <button onclick="setCurrentPage('expertise')" class="text-left py-3.5 px-2 text-sm font-semibold uppercase tracking-wider border-b border-gray-100 ${currentPage === 'expertise' ? 'text-[#a37e2c]' : 'text-[#2c2c2c]'} hover:text-[#a37e2c] transition-colors">Mandates</button>
+                            <button onclick="setCurrentPage('insights')" class="text-left py-3.5 px-2 text-sm font-semibold uppercase tracking-wider border-b border-gray-100 ${currentPage === 'insights' ? 'text-[#a37e2c]' : 'text-[#2c2c2c]'} hover:text-[#a37e2c] transition-colors">Registry</button>
+                            <button onclick="setCurrentPage('partners')" class="text-left py-3.5 px-2 text-sm font-semibold uppercase tracking-wider border-b border-gray-100 ${currentPage === 'partners' ? 'text-[#a37e2c]' : 'text-[#2c2c2c]'} hover:text-[#a37e2c] transition-colors">Counsel</button>
+                            <button onclick="setCurrentPage('partners')" class="mt-4 mb-2 mx-2 py-3 bg-[#0f172a] text-white text-xs font-bold uppercase tracking-wider rounded-md hover:bg-[#a37e2c] transition-colors">Private Consultation</button>
+                        </div>
+                    </div>
+                    ` : ''}
                 </nav>
                 
                 <!-- Main Content -->
@@ -265,18 +288,18 @@
                                 <div class="absolute inset-0 z-0">
                                     <img src="${IMAGES.institution}" class="w-full h-full object-cover opacity-[0.03] scale-105" alt="" />
                                 </div>
-                                <div class="relative z-10 max-w-7xl mx-auto px-6 w-full py-20">
-                                    <div class="max-w-3xl space-y-8">
-                                        <div class="inline-flex items-center gap-3 border-l-3 border-[#a37e2c] pl-5 py-1">
+                                <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 w-full py-24 md:py-20">
+                                    <div class="max-w-3xl space-y-6 md:space-y-8">
+                                        <div class="inline-flex items-center gap-3 border-l-4 border-[#a37e2c] pl-4 py-1">
                                             <span class="text-[10px] font-bold uppercase tracking-[0.4em] text-[#a37e2c]">Strategy Recalibrated</span>
                                         </div>
-                                        <h1 class="font-serif text-5xl md:text-7xl lg:text-8xl font-bold text-[#0f172a] leading-[1.1] tracking-tighter">
+                                        <h1 class="font-serif text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold text-[#0f172a] leading-[1.1] tracking-tighter">
                                             Law with <span class="italic text-[#a37e2c]">Purpose.</span>
                                         </h1>
-                                        <p class="text-lg md:text-2xl text-[#4a5568] leading-relaxed max-w-2xl font-light">
+                                        <p class="text-base md:text-xl lg:text-2xl text-[#4a5568] leading-relaxed max-w-2xl font-light">
                                             Navigating the complexities of the Hon'ble Supreme Court with two decades of senior-led integrity.
                                         </p>
-                                        <div class="flex flex-wrap gap-5 pt-4">
+                                        <div class="flex flex-col sm:flex-row flex-wrap gap-4 pt-2">
                                             <button onclick="setCurrentPage('partners')" class="px-7 py-3.5 font-bold uppercase tracking-[0.15em] text-[10px] transition-all duration-300 flex items-center justify-center gap-2 rounded-md shadow-md cursor-pointer bg-[#0f172a] text-white hover:bg-[#a37e2c]">Private Consultation <i class="fas fa-arrow-right text-[9px]"></i></button>
                                             <a href="${PORTFOLIO_PDF}" class="px-7 py-3.5 font-bold uppercase tracking-[0.15em] text-[10px] transition-all duration-300 flex items-center justify-center gap-2 rounded-md cursor-pointer border border-[#0f172a]/20 text-[#0f172a] hover:bg-[#0f172a] hover:text-white bg-white">Portfolio (PDF) <i class="fas fa-download text-[9px]"></i></a>
                                         </div>
@@ -284,41 +307,41 @@
                                 </div>
                             </header>
                             
-                            <section class="py-24 relative bg-[#0f172a]">
+                            <section class="py-16 md:py-24 relative bg-[#0f172a]">
                                 <div class="absolute inset-0 z-0"><img src="${IMAGES.supremeCourt}" class="w-full h-full object-cover opacity-5" alt="" /></div>
-                                <div class="max-w-7xl mx-auto px-6 relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                                    <div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-10 md:p-14">
-                                        <h3 class="font-serif text-[#a37e2c] text-2xl md:text-3xl mb-6 border-b border-white/10 pb-5 uppercase italic font-bold">The Preamble</h3>
-                                        <p class="text-white/70 font-light leading-relaxed text-lg font-serif italic">"WE, THE PEOPLE OF INDIA, having solemnly resolved to constitute India into a SOVEREIGN SOCIALIST SECULAR DEMOCRATIC REPUBLIC and to secure to all its citizens: JUSTICE, social, economic and political; LIBERTY... EQUALITY... FRATERNITY..."</p>
+                                <div class="max-w-7xl mx-auto px-4 sm:px-6 relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-16 items-center">
+                                    <div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-7 md:p-14">
+                                        <h3 class="font-serif text-[#a37e2c] text-xl md:text-3xl mb-5 border-b border-white/10 pb-4 uppercase italic font-bold">The Preamble</h3>
+                                        <p class="text-white/70 font-light leading-relaxed text-base md:text-lg font-serif italic">"WE, THE PEOPLE OF INDIA, having solemnly resolved to constitute India into a SOVEREIGN SOCIALIST SECULAR DEMOCRATIC REPUBLIC and to secure to all its citizens: JUSTICE, social, economic and political; LIBERTY... EQUALITY... FRATERNITY..."</p>
                                     </div>
-                                    <div class="space-y-8">
-                                        <div><span class="text-[#a37e2c] font-bold uppercase tracking-[0.4em] text-[9px] mb-3 block">Ethical Core</span><h2 class="font-serif text-4xl md:text-5xl font-bold text-white leading-tight">Institutional <span class="text-[#a37e2c]">Integrity.</span></h2></div>
-                                        <p class="text-gray-300 text-lg font-light leading-relaxed">Lex et Justitia operates as a guardian of Constitutional values, serving the individual's dignity and the nation's unified strength.</p>
+                                    <div class="space-y-6 md:space-y-8">
+                                        <div><span class="text-[#a37e2c] font-bold uppercase tracking-[0.4em] text-[9px] mb-3 block">Ethical Core</span><h2 class="font-serif text-3xl md:text-5xl font-bold text-white leading-tight">Institutional <span class="text-[#a37e2c]">Integrity.</span></h2></div>
+                                        <p class="text-gray-300 text-base md:text-lg font-light leading-relaxed">Lex et Justitia operates as a guardian of Constitutional values, serving the individual's dignity and the nation's unified strength.</p>
                                     </div>
                                 </div>
                             </section>
                         </div>
                     ` : currentPage === 'about' ? `
-                        <div class="page-fade py-24">
-                            <div class="max-w-7xl mx-auto px-6">
-                                <div class="mb-14"><span class="text-[#a37e2c] font-bold uppercase tracking-[0.4em] text-[9px] mb-3 block">Institution</span><h2 class="font-serif text-4xl md:text-5xl font-bold text-[#0f172a]">Legacy & Strategic Command.</h2></div>
-                                <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start mb-24">
-                                    <div class="space-y-6 text-lg font-light text-[#4a5568] leading-relaxed"><p>Established in 2007, Lex et Justitia has built a reputation for providing solutions that are both legally sound and commercially astute.</p><div class="p-7 bg-[#0f172a] text-white rounded-2xl border-l-4 border-[#a37e2c] shadow-lg"><h4 class="font-serif text-xl mb-2">Apex Command</h4><p class="text-sm opacity-70">Strategic presence in the Supreme Court for complex institutional mandates.</p></div></div>
-                                    <div class="relative overflow-hidden rounded-2xl shadow-xl"><img src="${IMAGES.library}" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" alt="" /></div>
+                        <div class="page-fade py-16 md:py-24">
+                            <div class="max-w-7xl mx-auto px-4 sm:px-6">
+                                <div class="mb-10 md:mb-14"><span class="text-[#a37e2c] font-bold uppercase tracking-[0.4em] text-[9px] mb-3 block">Institution</span><h2 class="font-serif text-3xl md:text-5xl font-bold text-[#0f172a]">Legacy & Strategic Command.</h2></div>
+                                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-16 items-start mb-12 md:mb-24">
+                                    <div class="space-y-6 text-base md:text-lg font-light text-[#4a5568] leading-relaxed"><p>Established in 2007, Lex et Justitia has built a reputation for providing solutions that are both legally sound and commercially astute.</p><div class="p-6 md:p-7 bg-[#0f172a] text-white rounded-2xl border-l-4 border-[#a37e2c] shadow-lg"><h4 class="font-serif text-xl mb-2">Apex Command</h4><p class="text-sm opacity-70">Strategic presence in the Supreme Court for complex institutional mandates.</p></div></div>
+                                    <div class="relative overflow-hidden rounded-2xl shadow-xl min-h-[250px]"><img src="${IMAGES.library}" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" alt="" /></div>
                                 </div>
-                                <div class="relative h-[50vh] rounded-2xl overflow-hidden flex items-center justify-center"><img src="${IMAGES.supremeCourt}" class="absolute inset-0 w-full h-full object-cover brightness-50" alt="" /><div class="absolute inset-0 bg-[#0f172a]/70"></div><div class="relative z-10 max-w-2xl p-8 md:p-12 text-center bg-white/10 backdrop-blur-md rounded-2xl"><i class="fas fa-landmark text-[#a37e2c] text-5xl mb-5"></i><h3 class="font-serif text-3xl md:text-4xl text-white font-bold mb-3">Supreme Command.</h3><p class="text-gray-200 font-light">Defined by constitutional rigor and a commitment to judicial clarity.</p></div></div>
+                                <div class="relative min-h-[280px] md:h-[50vh] rounded-2xl overflow-hidden flex items-center justify-center"><img src="${IMAGES.supremeCourt}" class="absolute inset-0 w-full h-full object-cover brightness-50" alt="" /><div class="absolute inset-0 bg-[#0f172a]/70"></div><div class="relative z-10 max-w-2xl p-6 md:p-12 text-center bg-white/10 backdrop-blur-md rounded-2xl mx-4"><i class="fas fa-landmark text-[#a37e2c] text-4xl md:text-5xl mb-4 md:mb-5"></i><h3 class="font-serif text-2xl md:text-4xl text-white font-bold mb-3">Supreme Command.</h3><p class="text-gray-200 font-light text-sm md:text-base">Defined by constitutional rigor and a commitment to judicial clarity.</p></div></div>
                             </div>
                         </div>
                     ` : currentPage === 'expertise' ? `
-                        <div class="page-fade py-24 bg-[#faf8f4]">
-                            <div class="max-w-7xl mx-auto px-6">
-                                <div class="mb-14 text-center"><span class="text-[#a37e2c] font-bold uppercase tracking-[0.4em] text-[9px] mb-3 block">Capabilities</span><h2 class="font-serif text-4xl md:text-5xl font-bold text-[#0f172a]">Practice Domains.</h2></div>
-                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div class="page-fade py-16 md:py-24 bg-[#faf8f4]">
+                            <div class="max-w-7xl mx-auto px-4 sm:px-6">
+                                <div class="mb-10 md:mb-14 text-center"><span class="text-[#a37e2c] font-bold uppercase tracking-[0.4em] text-[9px] mb-3 block">Capabilities</span><h2 class="font-serif text-3xl md:text-5xl font-bold text-[#0f172a]">Practice Domains.</h2></div>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
                                     ${PRACTICE_AREAS.map(area => `
-                                        <div class="bg-white rounded-xl p-8 border border-gray-100 hover:shadow-xl transition-all group">
-                                            <div class="text-[#a37e2c] mb-5 text-3xl group-hover:scale-110 transition-transform"><i class="fas ${area.icon}"></i></div>
-                                            <h3 class="font-serif text-xl font-bold text-[#0f172a] mb-3">${area.title}</h3>
-                                            <p class="text-gray-500 text-sm mb-5">${area.description}</p>
+                                        <div class="bg-white rounded-xl p-6 md:p-8 border border-gray-100 hover:shadow-xl transition-all group">
+                                            <div class="text-[#a37e2c] mb-4 md:mb-5 text-3xl group-hover:scale-110 transition-transform"><i class="fas ${area.icon}"></i></div>
+                                            <h3 class="font-serif text-lg md:text-xl font-bold text-[#0f172a] mb-2 md:mb-3">${area.title}</h3>
+                                            <p class="text-gray-500 text-sm mb-4 md:mb-5">${area.description}</p>
                                             <div class="space-y-1.5 pt-4 border-t border-gray-100">
                                                 ${area.services.map(s => `<div class="flex items-center gap-2 text-[10px] text-gray-400 font-semibold uppercase tracking-wider"><i class="fas fa-check-circle text-[#a37e2c] text-[8px]"></i> ${s}</div>`).join('')}
                                             </div>
@@ -328,31 +351,31 @@
                             </div>
                         </div>
                     ` : currentPage === 'insights' ? `
-                        <div class="page-fade py-24">
-                            <div class="max-w-7xl mx-auto px-6">
-                                <div class="mb-14 text-center"><span class="text-[#a37e2c] font-bold uppercase tracking-[0.4em] text-[9px] mb-3 block">Legal Registry</span><h2 class="font-serif text-4xl md:text-5xl font-bold text-[#0f172a]">Insights & Archive.</h2></div>
-                                <div class="mb-12 max-w-2xl mx-auto relative">
+                        <div class="page-fade py-16 md:py-24">
+                            <div class="max-w-7xl mx-auto px-4 sm:px-6">
+                                <div class="mb-10 md:mb-14 text-center"><span class="text-[#a37e2c] font-bold uppercase tracking-[0.4em] text-[9px] mb-3 block">Legal Registry</span><h2 class="font-serif text-3xl md:text-5xl font-bold text-[#0f172a]">Insights & Archive.</h2></div>
+                                <div class="mb-8 md:mb-12 max-w-2xl mx-auto relative">
                                     <i class="fas fa-search absolute left-5 top-1/2 -translate-y-1/2 text-[#a37e2c] text-sm"></i>
                                     <input type="text" placeholder="Search Registry..." value="${searchQuery.replace(/"/g, '&quot;')}" oninput="setSearchQuery(this.value)" class="w-full bg-white border border-gray-200 rounded-full py-4 pl-12 pr-5 text-base outline-none focus:shadow-md transition-all" />
                                 </div>
-                                <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
-                                    <div class="lg:col-span-2 space-y-6">
+                                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-12">
+                                    <div class="lg:col-span-2 space-y-5 md:space-y-6">
                                         ${filteredInsights.map(i => `
                                             <article class="bg-white rounded-xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-md transition-all">
-                                                <div class="p-6 cursor-pointer" onclick="toggleInsight(${i.id})">
-                                                    <div class="flex gap-5 items-start">
-                                                        <div class="text-center min-w-[50px]"><span class="block text-2xl font-serif font-bold text-[#0f172a] opacity-30">0${i.id}</span><span class="text-[8px] uppercase tracking-wider font-bold text-[#a37e2c]">${i.category}</span></div>
-                                                        <div class="flex-1">
-                                                            <h3 class="font-serif text-xl font-bold text-[#0f172a] hover:text-[#a37e2c] transition-colors">${i.title}</h3>
-                                                            <p class="text-gray-500 text-sm mt-1">${i.excerpt}</p>
-                                                            <div class="flex items-center gap-4 mt-3">
+                                                <div class="p-5 md:p-6 cursor-pointer" onclick="toggleInsight(${i.id})">
+                                                    <div class="flex gap-4 md:gap-5 items-start">
+                                                        <div class="text-center min-w-[44px]"><span class="block text-xl md:text-2xl font-serif font-bold text-[#0f172a] opacity-30">0${i.id}</span><span class="text-[7px] md:text-[8px] uppercase tracking-wider font-bold text-[#a37e2c]">${i.category}</span></div>
+                                                        <div class="flex-1 min-w-0">
+                                                            <h3 class="font-serif text-base md:text-xl font-bold text-[#0f172a] hover:text-[#a37e2c] transition-colors leading-snug">${i.title}</h3>
+                                                            <p class="text-gray-500 text-xs md:text-sm mt-1">${i.excerpt}</p>
+                                                            <div class="flex flex-wrap items-center gap-3 mt-3">
                                                                 <span class="text-[9px] uppercase tracking-wider text-gray-400">${i.date}</span>
-                                                                <span class="text-[10px] text-[#a37e2c] font-semibold flex items-center gap-1"><i class="fas fa-chevron-down text-[8px]"></i> Click to read full analysis</span>
+                                                                <span class="text-[10px] text-[#a37e2c] font-semibold flex items-center gap-1"><i class="fas fa-chevron-down text-[8px]"></i> Read full analysis</span>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="insight-content ${expandedInsights[i.id] ? 'expanded' : ''} px-6 pb-6">
+                                                <div class="insight-content ${expandedInsights[i.id] ? 'expanded' : ''} px-5 md:px-6 pb-5 md:pb-6">
                                                     <div class="mt-2 pt-4 border-t border-gray-100">
                                                         <p class="text-gray-600 text-sm leading-relaxed">${i.fullContent}</p>
                                                         <div class="mt-4 flex justify-end">
@@ -363,15 +386,15 @@
                                             </article>
                                         `).join('')}
                                     </div>
-                                    <div><div class="bg-[#0f172a] rounded-xl p-8 text-white sticky top-24"><h4 class="font-serif text-xl mb-4 uppercase tracking-wide">Archive Protocol</h4><p class="text-sm opacity-60 leading-relaxed mb-6">Substantive legal analysis intended for professional strategic foresight. Click any insight to read the complete legal commentary.</p><div class="space-y-3"><div class="flex items-center gap-2 text-[9px] font-bold uppercase text-[#a37e2c]"><i class="fas fa-chevron-right text-[8px]"></i> Constitutional Law</div><div class="flex items-center gap-2 text-[9px] font-bold uppercase text-[#a37e2c]"><i class="fas fa-chevron-right text-[8px]"></i> IBC Recalibration</div><div class="flex items-center gap-2 text-[9px] font-bold uppercase text-[#a37e2c]"><i class="fas fa-chevron-right text-[8px]"></i> Arbitration & ADR</div><div class="flex items-center gap-2 text-[9px] font-bold uppercase text-[#a37e2c]"><i class="fas fa-chevron-right text-[8px]"></i> PMLA Guidelines</div></div></div></div>
+                                    <div class="order-first lg:order-last mb-6 lg:mb-0"><div class="bg-[#0f172a] rounded-xl p-6 md:p-8 text-white lg:sticky lg:top-24"><h4 class="font-serif text-xl mb-4 uppercase tracking-wide">Archive Protocol</h4><p class="text-sm opacity-60 leading-relaxed mb-6">Substantive legal analysis intended for professional strategic foresight. Click any insight to read the complete legal commentary.</p><div class="grid grid-cols-2 lg:grid-cols-1 gap-2 lg:space-y-3"><div class="flex items-center gap-2 text-[9px] font-bold uppercase text-[#a37e2c]"><i class="fas fa-chevron-right text-[8px]"></i> Constitutional Law</div><div class="flex items-center gap-2 text-[9px] font-bold uppercase text-[#a37e2c]"><i class="fas fa-chevron-right text-[8px]"></i> IBC Recalibration</div><div class="flex items-center gap-2 text-[9px] font-bold uppercase text-[#a37e2c]"><i class="fas fa-chevron-right text-[8px]"></i> Arbitration & ADR</div><div class="flex items-center gap-2 text-[9px] font-bold uppercase text-[#a37e2c]"><i class="fas fa-chevron-right text-[8px]"></i> PMLA Guidelines</div></div></div></div>
                                 </div>
                             </div>
                         </div>
                     ` : `
-                        <div class="page-fade py-24">
-                            <div class="max-w-7xl mx-auto px-6">
-                                <div class="mb-14 text-center"><span class="text-[#a37e2c] font-bold uppercase tracking-[0.4em] text-[9px] mb-3 block">Senior Council</span><h2 class="font-serif text-4xl md:text-5xl font-bold text-[#0f172a]">Advocates of the Registry.</h2></div>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-5xl mx-auto">
+                        <div class="page-fade py-16 md:py-24">
+                            <div class="max-w-7xl mx-auto px-4 sm:px-6">
+                                <div class="mb-10 md:mb-14 text-center"><span class="text-[#a37e2c] font-bold uppercase tracking-[0.4em] text-[9px] mb-3 block">Senior Council</span><h2 class="font-serif text-3xl md:text-5xl font-bold text-[#0f172a]">Advocates of the Registry.</h2></div>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 max-w-5xl mx-auto">
                                     ${PARTNERS.map(p => `
                                         <div class="counsel-card bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all border border-gray-100 overflow-hidden">
                                             <div class="relative h-32 bg-gradient-to-r from-[#0f172a] to-[#1e2a3a] flex items-center justify-center">
@@ -400,11 +423,11 @@
                 </main>
                 
                 <!-- Footer -->
-                <footer class="relative py-20 mt-16 bg-[#0f172a]">
-                    <div class="relative z-10 max-w-6xl w-full mx-auto px-6 text-center text-white">
-                        <div class="mb-12"><h2 class="font-serif text-3xl md:text-5xl font-bold tracking-tight uppercase mb-4">Lex et Justitia</h2><div class="h-px w-24 bg-[#a37e2c] mx-auto mb-5"></div><span class="text-xs uppercase tracking-[0.4em] text-[#a37e2c] font-semibold">Strategy Recalibrated. Justice Perfected.</span></div>
-                        <div class="flex flex-wrap justify-center gap-8 text-[10px] font-bold uppercase tracking-wider mb-12"><a href="${LINKEDIN_FIRM}" target="_blank" class="hover:text-[#a37e2c] flex items-center gap-2"><i class="fab fa-linkedin-in"></i> Institutional LinkedIn</a><a href="${PORTFOLIO_PDF}" class="hover:text-[#a37e2c] flex items-center gap-2"><i class="fas fa-download"></i> Portfolio PDF</a><button onclick="setCurrentPage('insights')" class="hover:text-[#a37e2c]">Insights Archive</button></div>
-                        <div class="max-w-4xl mx-auto"><div class="p-8 border-l-4 border-[#a37e2c] bg-[#0f172a]/80 text-left"><h5 class="font-serif text-[#a37e2c] text-lg mb-4 uppercase font-bold">Regulatory Mandate</h5><p class="text-xs text-gray-400 uppercase tracking-wider leading-relaxed">In absolute compliance with the rules of the Bar Council of India, this digital registry serves an informational purpose exclusively. Access to this platform does not establish an attorney-client relationship, nor does it constitute an invitation, solicitation, or inducement to initiate legal engagement.</p></div><p class="text-[9px] text-gray-500 uppercase tracking-[0.4em] font-semibold mt-8">&copy; 2026 Lex et Justitia | Constitutional Integrity Reserved.</p></div>
+                <footer class="relative py-14 md:py-20 mt-8 md:mt-16 bg-[#0f172a]">
+                    <div class="relative z-10 max-w-6xl w-full mx-auto px-4 sm:px-6 text-center text-white">
+                        <div class="mb-8 md:mb-12"><h2 class="font-serif text-2xl md:text-5xl font-bold tracking-tight uppercase mb-4">Lex et Justitia</h2><div class="h-px w-24 bg-[#a37e2c] mx-auto mb-5"></div><span class="text-[10px] md:text-xs uppercase tracking-[0.4em] text-[#a37e2c] font-semibold">Strategy Recalibrated. Justice Perfected.</span></div>
+                        <div class="flex flex-wrap justify-center gap-6 md:gap-8 text-[10px] font-bold uppercase tracking-wider mb-8 md:mb-12"><a href="${LINKEDIN_FIRM}" target="_blank" class="hover:text-[#a37e2c] flex items-center gap-2 transition-colors"><i class="fab fa-linkedin-in"></i> Institutional LinkedIn</a><a href="${PORTFOLIO_PDF}" class="hover:text-[#a37e2c] flex items-center gap-2 transition-colors"><i class="fas fa-download"></i> Portfolio PDF</a><button onclick="setCurrentPage('insights')" class="hover:text-[#a37e2c] transition-colors">Insights Archive</button></div>
+                        <div class="max-w-4xl mx-auto"><div class="p-6 md:p-8 border-l-4 border-[#a37e2c] bg-[#0f172a]/80 text-left"><h5 class="font-serif text-[#a37e2c] text-base md:text-lg mb-3 md:mb-4 uppercase font-bold">Regulatory Mandate</h5><p class="text-[10px] md:text-xs text-gray-400 uppercase tracking-wider leading-relaxed">In absolute compliance with the rules of the Bar Council of India, this digital registry serves an informational purpose exclusively. Access to this platform does not establish an attorney-client relationship, nor does it constitute an invitation, solicitation, or inducement to initiate legal engagement.</p></div><p class="text-[9px] text-gray-500 uppercase tracking-[0.4em] font-semibold mt-6 md:mt-8">&copy; 2026 Lex et Justitia | Constitutional Integrity Reserved.</p></div>
                     </div>
                 </footer>
             </div>
@@ -416,6 +439,7 @@
     window.setCurrentPage = setCurrentPage;
     window.setSearchQuery = setSearchQuery;
     window.toggleInsight = toggleInsight;
+    window.toggleMobileMenu = toggleMobileMenu;
     
     renderApp();
 </script>
