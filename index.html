@@ -122,7 +122,7 @@
 <script>
     // DATA
     const LINKEDIN_FIRM = "https://www.linkedin.com/company/lex-et-justitia/";
-    const PORTFOLIO_PDF = "#";
+    const PORTFOLIO_PDF = "portfolio.pdf";
 
     const IMAGES = {
         supremeCourt: "https://images.unsplash.com/photo-1589391886085-8b6b0ac72a1a?q=80&w=2000&auto=format&fit=crop",
@@ -133,7 +133,6 @@
     const PARTNERS = [
         { 
             name: "Shreyas Gacche", 
-            role: "Advocate-on-Record, Hon'ble Supreme Court", 
             phone: "tel:+919582484942",
             whatsapp: "https://wa.me/919582484942",
             linkedin: "https://www.linkedin.com/in/shreyasgacche/", 
@@ -141,7 +140,6 @@
         },
         { 
             name: "Mohanish Thorat", 
-            role: "Principal Advocate & Head of Chambers", 
             phone: "tel:+919890735716",
             whatsapp: "https://wa.me/919890735716",
             linkedin: "https://www.linkedin.com/in/mohanishthorat/",
@@ -181,6 +179,22 @@
     function toggleInsight(id) {
         expandedInsights[id] = !expandedInsights[id];
         renderApp();
+    }
+
+    function downloadPDF() {
+        fetch(PORTFOLIO_PDF)
+            .then(res => res.blob())
+            .then(blob => {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'Lex-et-Justitia-Portfolio.pdf';
+                a.style.display = 'none';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                setTimeout(() => URL.revokeObjectURL(url), 1000);
+            });
     }
 
     function setCurrentPage(page) {
@@ -301,7 +315,7 @@
                                         </p>
                                         <div class="flex flex-col sm:flex-row flex-wrap gap-4 pt-2">
                                             <button onclick="setCurrentPage('partners')" class="px-7 py-3.5 font-bold uppercase tracking-[0.15em] text-[10px] transition-all duration-300 flex items-center justify-center gap-2 rounded-md shadow-md cursor-pointer bg-[#0f172a] text-white hover:bg-[#a37e2c]">Private Consultation <i class="fas fa-arrow-right text-[9px]"></i></button>
-                                            <a href="${PORTFOLIO_PDF}" class="px-7 py-3.5 font-bold uppercase tracking-[0.15em] text-[10px] transition-all duration-300 flex items-center justify-center gap-2 rounded-md cursor-pointer border border-[#0f172a]/20 text-[#0f172a] hover:bg-[#0f172a] hover:text-white bg-white">Portfolio (PDF) <i class="fas fa-download text-[9px]"></i></a>
+                                            <button onclick="downloadPDF()" class="px-7 py-3.5 font-bold uppercase tracking-[0.15em] text-[10px] transition-all duration-300 flex items-center justify-center gap-2 rounded-md cursor-pointer border border-[#0f172a]/20 text-[#0f172a] hover:bg-[#0f172a] hover:text-white bg-white">Portfolio (PDF) <i class="fas fa-download text-[9px]"></i></button>
                                         </div>
                                     </div>
                                 </div>
@@ -426,7 +440,7 @@
                 <footer class="relative py-14 md:py-20 mt-8 md:mt-16 bg-[#0f172a]">
                     <div class="relative z-10 max-w-6xl w-full mx-auto px-4 sm:px-6 text-center text-white">
                         <div class="mb-8 md:mb-12"><h2 class="font-serif text-2xl md:text-5xl font-bold tracking-tight uppercase mb-4">Lex et Justitia</h2><div class="h-px w-24 bg-[#a37e2c] mx-auto mb-5"></div><span class="text-[10px] md:text-xs uppercase tracking-[0.4em] text-[#a37e2c] font-semibold">Strategy Recalibrated. Justice Perfected.</span></div>
-                        <div class="flex flex-wrap justify-center gap-6 md:gap-8 text-[10px] font-bold uppercase tracking-wider mb-8 md:mb-12"><a href="${LINKEDIN_FIRM}" target="_blank" class="hover:text-[#a37e2c] flex items-center gap-2 transition-colors"><i class="fab fa-linkedin-in"></i> Institutional LinkedIn</a><a href="${PORTFOLIO_PDF}" class="hover:text-[#a37e2c] flex items-center gap-2 transition-colors"><i class="fas fa-download"></i> Portfolio PDF</a><button onclick="setCurrentPage('insights')" class="hover:text-[#a37e2c] transition-colors">Insights Archive</button></div>
+                        <div class="flex flex-wrap justify-center gap-6 md:gap-8 text-[10px] font-bold uppercase tracking-wider mb-8 md:mb-12"><a href="${LINKEDIN_FIRM}" target="_blank" class="hover:text-[#a37e2c] flex items-center gap-2 transition-colors"><i class="fab fa-linkedin-in"></i> Institutional LinkedIn</a><button onclick="downloadPDF()" class="hover:text-[#a37e2c] flex items-center gap-2 transition-colors cursor-pointer bg-transparent border-0 text-inherit font-inherit uppercase tracking-wider"><i class="fas fa-download"></i> Portfolio PDF</button><button onclick="setCurrentPage('insights')" class="hover:text-[#a37e2c] transition-colors">Insights Archive</button></div>
                         <div class="max-w-4xl mx-auto"><div class="p-6 md:p-8 border-l-4 border-[#a37e2c] bg-[#0f172a]/80 text-left"><h5 class="font-serif text-[#a37e2c] text-base md:text-lg mb-3 md:mb-4 uppercase font-bold">Regulatory Mandate</h5><p class="text-[10px] md:text-xs text-gray-400 uppercase tracking-wider leading-relaxed">In absolute compliance with the rules of the Bar Council of India, this digital registry serves an informational purpose exclusively. Access to this platform does not establish an attorney-client relationship, nor does it constitute an invitation, solicitation, or inducement to initiate legal engagement.</p></div><p class="text-[9px] text-gray-500 uppercase tracking-[0.4em] font-semibold mt-6 md:mt-8">&copy; 2026 Lex et Justitia | Constitutional Integrity Reserved.</p></div>
                     </div>
                 </footer>
