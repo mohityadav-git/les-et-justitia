@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Background -->
+  <rect width="64" height="64" rx="12" fill="#0f172a"/>
+  <!-- Scales of Justice -->
+  <!-- Center pole -->
+  <rect x="31" y="14" width="2" height="32" fill="#a37e2c"/>
+  <!-- Base -->
+  <rect x="22" y="46" width="20" height="3" rx="1.5" fill="#a37e2c"/>
+  <!-- Top beam -->
+  <rect x="16" y="17" width="32" height="2" rx="1" fill="#a37e2c"/>
+  <!-- Left pan string -->
+  <line x1="20" y1="19" x2="20" y2="30" stroke="#a37e2c" stroke-width="1.5"/>
+  <!-- Right pan string -->
+  <line x1="44" y1="19" x2="44" y2="30" stroke="#a37e2c" stroke-width="1.5"/>
+  <!-- Left pan -->
+  <path d="M14 30 Q20 35 26 30" stroke="#a37e2c" stroke-width="1.5" fill="none"/>
+  <!-- Right pan -->
+  <path d="M38 30 Q44 35 50 30" stroke="#a37e2c" stroke-width="1.5" fill="none"/>
+  <!-- Top knob -->
+  <circle cx="32" cy="14" r="2" fill="#a37e2c"/>
+</svg>
